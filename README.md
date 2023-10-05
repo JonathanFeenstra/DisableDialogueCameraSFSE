@@ -1,6 +1,6 @@
-# FirstPersonDialogueSFSE
+# DisableDialogueCameraSFSE
 
-SFSE plugin that automatically switches to first person when the dialogue menu opens (work in progress).
+SFSE plugin that disables the dialogue camera in Starfield.
 
 The project structure is copied and modified from [SmartAimingSFSE by powerofthree](https://github.com/powerof3/SmartAimingSFSE), which was released under the [MIT license](LICENSES/SmartAimingSFSE).
 
@@ -22,8 +22,8 @@ The project structure is copied and modified from [SmartAimingSFSE by powerofthr
 
 ## Building
 ```
-git clone https://github.com/JonathanFeenstra/FirstPersonDialogueSFSE.git
-cd FirstPersonDialogueSFSE
+git clone https://github.com/JonathanFeenstra/DisableDialogueCameraSFSE.git
+cd DisableDialogueCameraSFSE
 cmake --preset vs2022-windows-vcpkg-sf
 cmake --build build --config Release
 ```

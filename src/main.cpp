@@ -1,32 +1,36 @@
-class MenuOpenCloseEventSink final : 
-	public RE::BSTEventSink<RE::MenuOpenCloseEvent>,
-	public ISingleton<MenuOpenCloseEventSink>
+namespace Hook
 {
-	RE::BSEventNotifyControl ProcessEvent(const RE::MenuOpenCloseEvent& a_event, RE::BSTEventSource<RE::MenuOpenCloseEvent>*) override
+	typedef void(WINAPI* pFunc)(std::uint64_t a_1, RE::CameraState);
+	inline pFunc originalFunction;
+	inline static void replacementFunction(std::uint64_t a_1, RE::CameraState a_cameraState)
 	{
-		if (a_event.menuName == "DialogueMenu" && a_event.opening) {
-			if (const auto playerCamera = RE::PlayerCamera::GetSingleton(); playerCamera) {
-				playerCamera->SetCameraState(RE::CameraState::kFirstPerson);
-			}
+		const auto currentState = *stl::adjust_pointer<RE::CameraState>(RE::PlayerCamera::GetSingleton()->currentState, 0x50);
+		originalFunction(a_1, a_cameraState);
+		if (a_cameraState == RE::CameraState::kDialogue) {
+			originalFunction(a_1, currentState);
 		}
+	}
 
-		return RE::BSEventNotifyControl::kContinue;
+	inline static void Install()
+	{
+		const auto targetAddress = REL::ID(166078).address();
+		originalFunction = (pFunc)targetAddress;
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		DetourAttach(&(PVOID&)originalFunction, (PBYTE)&replacementFunction);
+		if (DetourTransactionCommit() == NO_ERROR) {
+			logger::info("Installed SetCameraState hook");
+		} else {
+			logger::warn("Could not install SetCameraState hook");
+		}
 	}
 };
-
-static void Install()
-{
-	if (const auto ui = RE::UI::GetSingleton()) {
-		ui->RegisterSink(MenuOpenCloseEventSink::GetSingleton());
-		logger::info("Registered MenuOpenCloseEventSink");
-	}
-}
 
 static void MessageCallback(SFSE::MessagingInterface::Message* a_msg) noexcept
 {
 	switch (a_msg->type) {
 	case SFSE::MessagingInterface::kPostLoad:
-		Install();
+		Hook::Install();
 		break;
 	default:
 		break;

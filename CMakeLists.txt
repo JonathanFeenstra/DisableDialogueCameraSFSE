@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-set(NAME "FirstPersonDialogue" CACHE STRING "")
+set(NAME "DisableDialogueCamera" CACHE STRING "")
 set(VERSION 1.0.0 CACHE STRING "")
 
 # ---- Options ----
@@ -91,6 +91,7 @@ else ()
 endif ()
 
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/bitmasks.hpp")
+find_library(Detours_LIBRARIES NAMES detours.lib)
 
 # ---- Add source files ----
 
@@ -154,6 +155,7 @@ target_link_libraries(
 	${PROJECT_NAME}
 	PRIVATE
 		CommonLibSF::CommonLibSF
+		${Detours_LIBRARIES}
 )
 
 target_precompile_headers(

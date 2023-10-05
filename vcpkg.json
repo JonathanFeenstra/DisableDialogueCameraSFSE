@@ -1,5 +1,5 @@
 {
-  "name": "first-person-dialogue",
+  "name": "disable-dialogue-camera",
   "version-string": "1.0.0",
   "description": "",
   "homepage": "",
@@ -7,6 +7,7 @@
   "dependencies": [
     "boost-stl-interfaces",
     "clib-util",
+	"detours",
     "rsm-binary-io",
     "spdlog",
     "xbyak"

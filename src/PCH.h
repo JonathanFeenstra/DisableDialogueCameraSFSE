@@ -5,6 +5,9 @@
 
 #include <ClibUtil/singleton.hpp>
 
+#include <Windows.h>
+#include <detours/detours.h>
+
 #ifdef NDEBUG
 #	include <spdlog/sinks/basic_file_sink.h>
 #else
